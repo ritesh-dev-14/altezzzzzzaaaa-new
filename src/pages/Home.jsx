@@ -1065,8 +1065,8 @@ export default function Home() {
         <motion.img
           className="home-hero__image"
           style={{ y: heroImageY, scale: heroImageScale }}
-          src={heroKitchen}
-          alt="Architectural modular kitchen with a sculptural island"
+          src={craftsmanshipKitchen}
+          alt="Warm contemporary kitchen with a sculptural stone island and timber finishes"
           fetchPriority="high"
         />
         <div className="home-hero__shade" />
