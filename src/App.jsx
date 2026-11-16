@@ -7,7 +7,8 @@ import About from './pages/About';
 import Collections from './pages/Collections';
 import B2B from './pages/B2B';
 import Contact from './pages/Contact';
-import logo from './images/logo.webp';
+import CursorGlow from './components/CursorGlow';
+import logo from '../images/logo.png';
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -30,7 +31,7 @@ function App() {
     <Router>
       <div className="min-h-screen flex flex-col font-sans text-charcoal bg-cream">
         <Navbar />
-        <main className="flex-grow">
+        <div className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
@@ -38,21 +39,22 @@ function App() {
             <Route path="/b2b-hospitality" element={<B2B />} />
             <Route path="/contact" element={<Contact />} />
           </Routes>
-        </main>
+        </div>
         <Footer />
+        <CursorGlow />
       </div>
       {showSplash && (
         <div
           className={`splash-screen${isSplashExiting ? ' splash-screen--exiting' : ''}`}
           role="status"
-          aria-label="Aesthetic Homez is loading"
+          aria-label="Altezza is loading"
         >
           <div className="splash-screen__glow" />
           <div className="splash-screen__content">
             <span className="splash-screen__orbit splash-screen__orbit--outer" />
             <span className="splash-screen__orbit splash-screen__orbit--inner" />
-            <img className="splash-screen__logo" src={logo} alt="Aesthetic Homez" />
-            <p className="splash-screen__tagline">Where fabrics speak luxury</p>
+            <img className="splash-screen__logo" src={logo} alt="ALTEZZA — Kitchen Wardrobe" />
+            <p className="splash-screen__tagline">The art of living, reimagined</p>
             <span className="splash-screen__rule" />
           </div>
         </div>

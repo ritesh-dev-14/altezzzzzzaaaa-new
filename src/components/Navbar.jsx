@@ -4,7 +4,7 @@ import { ArrowDownRight, ArrowUpRight } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { createPortal } from 'react-dom';
 import { NAV_LINKS } from '../data/constants';
-import logo from '../images/logo.webp';
+import logo from '../../images/logo.png';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,11 +38,11 @@ export default function Navbar() {
     <>
     <header className="site-header">
       <nav className="site-nav" aria-label="Main navigation">
-        <Link to="/" className="site-nav__brand" aria-label="Aesthetic Homez home">
-          <img src={logo} alt="Aesthetic Homez — By Swastik Home Decor" />
+        <Link to="/" className="site-nav__brand" aria-label="Altezza home">
+          <img src={logo} alt="ALTEZZA — Kitchen Wardrobe" />
         </Link>
 
-        <p className="site-nav__note">Thoughtfully made<br />for beautiful living</p>
+        <p className="site-nav__note">Kitchens &amp; wardrobes<br />made around you</p>
 
         <button
           ref={toggleButtonRef}
@@ -92,9 +92,9 @@ export default function Navbar() {
                   to="/"
                   className="site-menu__brand"
                   onClick={() => setIsOpen(false)}
-                  aria-label="Aesthetic Homez home"
+                  aria-label="Altezza home"
                 >
-                  <img src={logo} alt="Aesthetic Homez" />
+                  <img src={logo} alt="ALTEZZA — Kitchen Wardrobe" />
                 </Link>
                 <button
                   ref={closeButtonRef}
@@ -109,7 +109,7 @@ export default function Navbar() {
               </div>
 
               <div className="site-menu__content">
-                <p className="site-menu__eyebrow">Where fabrics speak luxury</p>
+                <p className="site-menu__eyebrow">Thoughtful kitchens. Considered living.</p>
                 <div className="site-menu__links">
                   {NAV_LINKS.map((link, index) => (
                     <motion.div
@@ -134,9 +134,9 @@ export default function Navbar() {
               </div>
 
               <div className="site-menu__bottom">
-                <span>Panipat, India</span>
+                <span>ALTEZZA · KITCHEN WARDROBE</span>
                 <Link to="/contact" onClick={() => setIsOpen(false)}>
-                  Start a conversation <ArrowDownRight size={16} aria-hidden="true" />
+                  Plan your kitchen <ArrowDownRight size={16} aria-hidden="true" />
                 </Link>
               </div>
             </motion.aside>

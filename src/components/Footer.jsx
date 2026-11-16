@@ -1,138 +1,87 @@
-// import React from 'react';
-// import { COMPANY_INFO } from '../data/constants';
-// import { Link } from 'react-router-dom';
-
-// export default function Footer() {
-//   return (
-//     <footer className="bg-charcoal text-white py-12 px-6 md:px-12 border-t-4 border-gold">
-//       <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-8">
-//         <div>
-//           <h2 className="font-serif text-2xl text-gold mb-4">{COMPANY_INFO.name}</h2>
-//           <p className="text-gray-400 text-sm">{COMPANY_INFO.tagline}</p>
-//           <p className="text-gray-500 text-xs mt-2 uppercase tracking-wider">By {COMPANY_INFO.parent}</p>
-//         </div>
-//         <div>
-//           <h3 className="font-serif text-lg mb-4 text-white">Contact</h3>
-//           <p className="text-gray-400 text-sm">{COMPANY_INFO.location}</p>
-//           <p className="text-gray-400 text-sm mt-2">{COMPANY_INFO.email}</p>
-//           <p className="text-gray-400 text-sm mt-2">{COMPANY_INFO.phone}</p>
-//         </div>
-//         <div>
-//           <h3 className="font-serif text-lg mb-4 text-white">India's Textile Hub</h3>
-//           <p className="text-gray-400 text-sm leading-relaxed">
-//             Proudly manufactured and exported from Panipat. Premium quality curtains, upholstery, and designer blinds for luxury spaces.
-//           </p>
-//         </div>
-//       </div>
-//       <div className="max-w-7xl mx-auto mt-12 pt-6 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center text-gray-500 text-xs">
-//         <p>© {new Date().getFullYear()} {COMPANY_INFO.name}. All rights reserved.</p>
-//         <div className="mt-4 md:mt-0 space-x-4">
-//           <Link to="/about" className="hover:text-gold transition">About</Link>
-//           <Link to="/contact" className="hover:text-gold transition">Contact</Link>
-//         </div>
-//       </div>
-//     </footer>
-//   );
-// }
-
-
-
-
 import React from 'react';
-import { COMPANY_INFO } from '../data/constants';
 import { Link } from 'react-router-dom';
-import { Camera, ArrowRight, MapPin, Phone, Mail } from 'lucide-react';
-import logo from '../images/logo.webp';
+import { ArrowUpRight } from 'lucide-react';
+import { COMPANY_INFO, NAV_LINKS } from '../data/constants';
+import logo from '../../images/logo.png';
+
+const collectionLinks = [
+  { label: 'Modular kitchens', category: 'Kitchens' },
+  { label: 'Kitchen wardrobes', category: 'Kitchen wardrobes' },
+  { label: 'Materials & finishes', category: 'Materials & finishes' },
+  { label: 'Smart storage', category: 'Smart storage' },
+];
 
 export default function Footer() {
   return (
-    <footer className="bg-[#111] text-gray-300 pt-20 pb-10 px-6 md:px-12 border-t border-gray-800">
+    <footer className="site-footer bg-[#EDE7D9] text-[#171717] pt-20 pb-10 px-6 md:px-12 border-t-2 border-[#E6B51A]">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-16">
-        
-        {/* Brand Column */}
         <div className="space-y-6">
-          <img src={logo} alt={COMPANY_INFO.name} className="h-16 w-auto grayscale opacity-80 hover:grayscale-0 hover:opacity-100 transition-all duration-500" />
-          <p className="text-gray-400 text-sm leading-relaxed pr-4">
-            {COMPANY_INFO.tagline}. Proudly manufactured and exported from Panipat, India's textile hub. Premium curtains, upholstery, and blinds.
+          <img
+            src={logo}
+            alt="ALTEZZA — Kitchen Wardrobe"
+            className="h-[58px] w-[210px] object-contain object-left"
+          />
+          <p className="text-[#77736B] text-sm leading-relaxed pr-4">
+            {COMPANY_INFO.tagline}. Thoughtfully designed modular kitchens and
+            kitchen wardrobes, made around the way you live.
           </p>
-          <div className="flex space-x-4">
-            <a href="#" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gold hover:text-[#111] transition-colors duration-300">
-              <Camera size={18} aria-hidden="true" />
-            </a>
-            <a href="#" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gold hover:text-[#111] transition-colors duration-300">
-              <span className="text-lg font-bold leading-none" aria-hidden="true">f</span>
-            </a>
-            <a href="#" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gold hover:text-[#111] transition-colors duration-300">
-              <span className="text-xs font-bold leading-none" aria-hidden="true">in</span>
-            </a>
-          </div>
         </div>
 
-        {/* Quick Links Column */}
         <div>
-          <h3 className="text-white font-serif text-xl mb-6">Quick Links</h3>
+          <h3 className="font-serif text-xl mb-6">Explore</h3>
           <ul className="space-y-4">
-            {['Home', 'About', 'Collections', 'B2B & Hospitality', 'Contact'].map((item) => (
-              <li key={item}>
-                <Link 
-                  to={item === 'Home' ? '/' : `/${item.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-')}`} 
-                  className="text-gray-400 hover:text-gold flex items-center group transition-colors text-sm"
+            {NAV_LINKS.map((item) => (
+              <li key={item.path}>
+                <Link
+                  to={item.path}
+                  className="text-[#77736B] hover:text-[#171717] transition-colors text-sm"
                 >
-                  <ArrowRight size={14} className="mr-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
-                  {item}
+                  {item.name}
                 </Link>
               </li>
             ))}
           </ul>
         </div>
 
-        {/* Categories Column */}
         <div>
-          <h3 className="text-white font-serif text-xl mb-6">Our Collections</h3>
+          <h3 className="font-serif text-xl mb-6">Designed for living</h3>
           <ul className="space-y-4">
-            {['Luxury Curtains', 'Premium Upholstery', 'Designer Blinds', 'Custom B2B Solutions'].map((item) => (
-              <li key={item}>
-                <Link to="/collections" className="text-gray-400 hover:text-gold transition-colors text-sm">
-                  {item}
+            {collectionLinks.map((item) => (
+              <li key={item.label}>
+                <Link
+                  to="/collections"
+                  state={{ category: item.category }}
+                  className="text-[#77736B] hover:text-[#171717] transition-colors text-sm"
+                >
+                  {item.label}
                 </Link>
               </li>
             ))}
           </ul>
         </div>
 
-        {/* Contact Column */}
         <div>
-          <h3 className="text-white font-serif text-xl mb-6">Get In Touch</h3>
-          <div className="space-y-4">
-            <div className="flex items-start">
-              <MapPin size={18} className="text-gold mr-3 mt-1 flex-shrink-0" />
-              <div>
-                <p className="text-gray-400 text-sm">{COMPANY_INFO.name} <br/>By {COMPANY_INFO.parent}</p>
-                <p className="text-gray-400 text-sm mt-1">{COMPANY_INFO.location}</p>
-              </div>
-            </div>
-            <div className="flex items-center">
-              <Phone size={18} className="text-gold mr-3 flex-shrink-0" />
-              <p className="text-gray-400 text-sm">{COMPANY_INFO.phone}</p>
-            </div>
-            <div className="flex items-center">
-              <Mail size={18} className="text-gold mr-3 flex-shrink-0" />
-              <p className="text-gray-400 text-sm">{COMPANY_INFO.email}</p>
-            </div>
-          </div>
+          <h3 className="font-serif text-xl mb-6">Start a conversation</h3>
+          <p className="text-[#77736B] text-sm leading-relaxed mb-5">
+            Tell us about your space, your plans, and what you need from your
+            kitchen.
+          </p>
+          <Link
+            to="/contact"
+            className="inline-flex items-center gap-2 text-sm font-medium hover:text-[#8E7010] transition-colors"
+          >
+            Book a consultation <ArrowUpRight size={16} aria-hidden="true" />
+          </Link>
         </div>
-
       </div>
 
-      {/* Bottom Bar */}
-      <div className="max-w-7xl mx-auto pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4">
-        <p className="text-gray-500 text-xs">
+      <div className="max-w-7xl mx-auto pt-8 border-t border-[#171717]/15 flex flex-col md:flex-row justify-between items-center gap-4">
+        <p className="text-[#77736B] text-xs">
           © {new Date().getFullYear()} {COMPANY_INFO.name}. All rights reserved.
         </p>
-        <div className="flex space-x-6 text-xs text-gray-500">
-          <a href="#" className="hover:text-gold transition-colors">Privacy Policy</a>
-          <a href="#" className="hover:text-gold transition-colors">Terms of Service</a>
-        </div>
+        <span className="text-[#77736B] text-xs uppercase tracking-[0.18em]">
+          {COMPANY_INFO.descriptor}
+        </span>
       </div>
     </footer>
   );

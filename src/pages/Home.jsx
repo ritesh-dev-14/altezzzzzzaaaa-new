@@ -2,58 +2,64 @@ import React, { useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowDown, ArrowRight, ArrowUpRight } from 'lucide-react';
+import heroKitchen from '../../images/hero-kitchen.avif';
+import kitchenOne from '../../images/kitchen-01.avif';
+import kitchenTwo from '../../images/kitchen-02.avif';
+import kitchenWardrobe from '../../images/collection-wardrobes.webp';
+import storageDetail from '../../images/about-interior.avif';
+import craftsmanshipKitchen from '../../images/craftsmanship-kitchen.webp';
 
 const collections = [
   {
     number: '01',
-    name: 'Curtains',
-    detail: 'Light, framed beautifully.',
-    image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=85',
+    name: 'Kitchens',
+    detail: 'Thoughtful design, made for living.',
+    image: heroKitchen,
   },
   {
     number: '02',
-    name: 'Upholstery',
-    detail: 'Made for everyday living.',
-    image: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=85',
+    name: 'Kitchen wardrobes',
+    detail: 'A considered place for everything.',
+    image: kitchenWardrobe,
   },
   {
     number: '03',
-    name: 'Blinds',
-    detail: 'A softer way to shape light.',
-    image: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1200&q=85',
+    name: 'Intelligent storage',
+    detail: 'Beautifully in its place.',
+    image: storageDetail,
   },
 ];
 
 const spaces = [
   {
-    name: 'Curtains',
-    detail: 'Let the light in, just so.',
-    image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1400&q=85',
-    alt: 'Soft daylight filtered through elegant curtains',
+    name: 'Contemporary kitchens',
+    detail: 'Designed around your everyday.',
+    image: kitchenOne,
+    alt: 'Light-filled contemporary kitchen with a generous island',
   },
   {
-    name: 'Upholstery',
-    detail: 'Comfort in every detail.',
-    image: 'https://images.unsplash.com/photo-1617806118233-18e1c0935474?auto=format&fit=crop&w=1400&q=85',
-    alt: 'Warm, textured upholstery in a thoughtfully designed room',
+    name: 'Kitchen wardrobes',
+    detail: 'A place for everything.',
+    image: kitchenWardrobe,
+    alt: 'Warm timber kitchen wardrobe with integrated shelves and lighting',
   },
   {
-    name: 'Blinds',
-    detail: 'A little more control over the light.',
-    image: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1400&q=85',
-    alt: 'Sunlight and considered window treatments in a modern interior',
+    name: 'Warm minimalism',
+    detail: 'A softer balance of stone and timber.',
+    image: kitchenTwo,
+    alt: 'Minimal timber kitchen with a bright stone worktop',
   },
   {
-    name: 'Living',
-    detail: 'Made for the moments in between.',
-    image: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1400&q=85',
-    alt: 'A calm, naturally layered living space',
+    name: 'Craftsmanship',
+    detail: 'Details to live with for years.',
+    image: craftsmanshipKitchen,
+    alt: 'Carefully finished contemporary modular kitchen',
   },
   {
-    name: 'Hospitality',
-    detail: 'A warm welcome, in every room.',
-    image: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1400&q=85',
-    alt: 'A refined interior designed for guests',
+    name: 'Thoughtful storage',
+    detail: 'A place for the little things.',
+    image: storageDetail,
+    alt: 'Custom kitchen drawer with organised storage compartments',
   },
 ];
 
@@ -94,12 +100,12 @@ function CollectionCard({ item, index }) {
         <div className="collection-card__image">
           <motion.img
             src={item.image}
-            alt={`${item.name} fabric collection`}
+            alt={`${item.name} kitchen design`}
             loading="lazy"
             style={{ y: imageY, scale: imageScale, clipPath: imageReveal }}
           />
           <span className="collection-card__arrow"><ArrowUpRight size={20} /></span>
-          <span className="collection-card__image-label">Aesthetic Homez</span>
+          <span className="collection-card__image-label">ALTEZZA</span>
         </div>
         <div className="collection-card__caption">
           <span className="collection-card__number">{item.number}</span>
@@ -113,48 +119,64 @@ function CollectionCard({ item, index }) {
   );
 }
 
-function EditorialSection() {
-  const sectionRef = useRef(null);
-  const reduceMotion = useReducedMotion();
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start end', 'end start'],
-  });
-  const firstLineX = useTransform(scrollYProgress, [0, 1], reduceMotion ? [0, 0] : ['12%', '-12%']);
-  const secondLineX = useTransform(scrollYProgress, [0, 1], reduceMotion ? [0, 0] : ['-10%', '10%']);
+// Single Word reveal helper component for smooth scroll highlighting
+function ScrollWord({ word, progress, range }) {
+  const opacity = useTransform(progress, range, [0, 1]);
+  const y = useTransform(progress, range, [24, 0]);
 
   return (
-    <section ref={sectionRef} className="editorial-section" aria-label="Our design philosophy">
+    <motion.span style={{ opacity, y }} className="inline-block mr-[0.25em]">
+      {word}
+    </motion.span>
+  );
+}
+
+function EditorialSection() {
+  const containerRef = useRef(null);
+  const reduceMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start 75%', 'end 45%'],
+  });
+
+  const paragraphText =
+    "Crafted spaces built for modern living. Every culinary routine demands precision, warmth, and intuitive flow. Our modular designs integrate seamlessly into your lifestyle, balancing striking architectural stone finishes with warm, organic timber textures.";
+
+  const words = paragraphText.split(' ');
+
+  return (
+    <section className="editorial-section" aria-label="Altezza kitchen design philosophy">
       <div className="editorial-heading">
-        <p className="editorial-kicker">Aesthetic Homez · Panipat, India</p>
+        <p className="editorial-kicker">ALTEZZA · KITCHEN WARDROBE</p>
         <p className="editorial-intro">
-          We believe the feeling of a room is found in the details you can touch,
-          and the light you let in.
+          A kitchen is more than a place to prepare a meal. It is where considered
+          materials, thoughtful storage, and the rhythms of everyday life come together.
         </p>
       </div>
 
-      <div className="editorial-type" aria-label="A language of matter and light">
-        <motion.div className="editorial-line-row" style={{ x: firstLineX }}>
-          <span className="editorial-line editorial-line--first">A</span>
-          <div className="editorial-image-wrap">
-          <motion.img
-            initial={{ opacity: 0, scale: 0.72, y: 36 }}
-            whileInView={{ opacity: 1, scale: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.35 }}
-            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-            src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=900&q=85"
-            alt="Warm, thoughtfully layered living room"
-          />
-          </div>
-          <span className="editorial-line editorial-line--first">language</span>
-        </motion.div>
-        <motion.p className="editorial-line editorial-line--second" style={{ x: secondLineX }}>
-          of matter &amp; light.
-        </motion.p>
+      {/* Word-by-word scroll reveal block */}
+      <div ref={containerRef} className="editorial-word-container">
+        <p className="editorial-huge-text">
+          {words.map((word, index) => {
+            if (reduceMotion) {
+              return <span key={index} style={{ marginRight: '0.25em' }}>{word}</span>;
+            }
+            const start = index / words.length;
+            const end = start + 1 / words.length;
+            return (
+              <ScrollWord
+                key={index}
+                word={word}
+                progress={scrollYProgress}
+                range={[start, end]}
+              />
+            );
+          })}
+        </p>
       </div>
 
       <div className="editorial-footer">
-        <span>Thoughtful fabrics. Considered spaces.</span>
+        <span>Thoughtful design. Considered spaces.</span>
         <span>Scroll to discover <ArrowDown size={15} aria-hidden="true" /></span>
       </div>
     </section>
@@ -176,27 +198,27 @@ function FullscreenFeature() {
   const copyY = useTransform(scrollYProgress, [0.35, 0.85], reduceMotion ? [0, 0] : [24, 0]);
 
   return (
-    <section ref={sectionRef} className="fullscreen-feature" aria-label="Aesthetic Homez interiors">
+    <section ref={sectionRef} className="fullscreen-feature" aria-label="Altezza kitchen interiors">
       <motion.div
         className="fullscreen-feature__frame"
         style={{ opacity: frameOpacity, scale: frameScale, y: frameY }}
       >
         <motion.img
           className="fullscreen-feature__image"
-          src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=2400&q=90"
-          alt="A calm, sunlit living room layered with natural textures"
+          src={kitchenTwo}
+          alt="Warm timber kitchen with refined stone finishes"
           loading="lazy"
           style={{ scale: imageScale }}
         />
         <div className="fullscreen-feature__shade" />
         <motion.div className="fullscreen-feature__copy" style={{ opacity: copyOpacity, y: copyY }}>
-          <p className="fullscreen-feature__eyebrow">The art of feeling at home</p>
-          <h2>A softer kind<br />of <em>beautiful.</em></h2>
+          <p className="fullscreen-feature__eyebrow">Made for the way you live</p>
+          <h2>Everyday rituals,<br /><em>beautifully considered.</em></h2>
           <Link to="/collections" className="fullscreen-feature__link">
-            Explore the collection <ArrowUpRight size={17} aria-hidden="true" />
+            Explore our kitchens <ArrowUpRight size={17} aria-hidden="true" />
           </Link>
         </motion.div>
-        <span className="fullscreen-feature__caption">Aesthetic Homez · Made for living</span>
+        <span className="fullscreen-feature__caption">ALTEZZA · Designed around you</span>
       </motion.div>
     </section>
   );
@@ -242,7 +264,7 @@ function SpacesShowcase() {
               key={space.name}
               type="button"
               onMouseEnter={() => setActiveSpace(index)}
-              onFocus={() => setActiveSpace(index)}
+              onFo cus={() => setActiveSpace(index)}
               onClick={() => setActiveSpace(index)}
               aria-pressed={activeSpace === index}
             >
@@ -274,13 +296,13 @@ export default function Home() {
   const heroImageScale = useTransform(scrollYProgress, [0, 1], reduceMotion ? [1, 1] : [1, 1.12]);
 
   return (
-    <div className="home-page">
+    <main className="home-page">
       <section ref={heroRef} className="home-hero">
         <motion.img
           className="home-hero__image"
           style={{ y: heroImageY, scale: heroImageScale }}
-          src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=2400&q=90"
-          alt="Sunlit living room dressed in natural textures"
+          src={heroKitchen}
+          alt="Architectural modular kitchen with a sculptural island"
           fetchPriority="high"
         />
         <div className="home-hero__shade" />
@@ -291,9 +313,9 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: reduceMotion ? 0 : 0.25, duration: reduceMotion ? 0.01 : 0.8, ease: [0.22, 1, 0.36, 1] }}
           >
-            Fabrics for the feeling of home
+            ALTEZZA · KITCHEN WARDROBE
           </motion.p>
-          <h1 className="home-hero__title" aria-label="Make room for beautiful living">
+          <h1 className="home-hero__title" aria-label="The art of living, reimagined">
             <span className="home-hero__title-line">
               <motion.span
                 initial={{ y: reduceMotion ? 0 : '110%', opacity: reduceMotion ? 1 : 0 }}
@@ -301,7 +323,7 @@ export default function Home() {
                 transition={{ delay: reduceMotion ? 0 : 0.4, duration: reduceMotion ? 0.01 : 1, ease: [0.22, 1, 0.36, 1] }}
                 aria-hidden="true"
               >
-                Make room for
+                The art of
               </motion.span>
             </span>
             <span className="home-hero__title-line">
@@ -311,7 +333,7 @@ export default function Home() {
                 transition={{ delay: reduceMotion ? 0 : 0.58, duration: reduceMotion ? 0.01 : 1.05, ease: [0.22, 1, 0.36, 1] }}
                 aria-hidden="true"
               >
-                <em>beautiful living.</em>
+                <em>living, reimagined.</em>
               </motion.span>
             </span>
           </h1>
@@ -321,8 +343,8 @@ export default function Home() {
             animate={{ opacity: 1 }}
             transition={{ delay: reduceMotion ? 0 : 0.95, duration: reduceMotion ? 0.01 : 0.8, ease: [0.22, 1, 0.36, 1] }}
           >
-            <p>Considered curtains, upholstery &amp; blinds, made with care in Panipat.</p>
-            <Link to="/collections" className="home-round-link" aria-label="Explore our collections">
+            <p>Thoughtfully designed modular kitchens where architectural elegance meets everyday functionality.</p>
+            <Link to="/collections" className="home-round-link" aria-label="Explore our kitchens">
               <ArrowUpRight size={21} />
             </Link>
           </motion.div>
@@ -338,6 +360,22 @@ export default function Home() {
         <EditorialSection />
       </div>
 
+      <section
+        className="home-marquee"
+        aria-label="Thoughtful design, considered spaces, bespoke kitchens, crafted wardrobes"
+      >
+        <div className="home-marquee__track" aria-hidden="true">
+          {[0, 1].map((copy) => (
+            <div className="home-marquee__group" key={copy}>
+              <span>Thoughtful design</span>
+              <span>Considered spaces</span>
+              <span>Bespoke kitchens</span>
+              <span>Crafted wardrobes</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
       <SpacesShowcase />
 
       <FullscreenFeature />
@@ -350,8 +388,8 @@ export default function Home() {
             viewport={{ once: true, amount: 0.4 }}
             variants={reveal}
           >
-            <p className="section-eyebrow">Made to feel like you</p>
-            <h2>Textures that<br /><em>make a home.</em></h2>
+            <p className="section-eyebrow">Made around the way you live</p>
+            <h2>Spaces that<br /><em>make room for life.</em></h2>
           </motion.div>
           <motion.p
             className="collection-heading__note"
@@ -360,8 +398,8 @@ export default function Home() {
             viewport={{ once: true, amount: 0.4 }}
             variants={reveal}
           >
-            From the first touch to the last light of day, find the details that
-            make your space your own.
+            From the layout to the last detail, explore kitchens shaped around
+            your routines, your space, and your point of view.
           </motion.p>
         </div>
 
@@ -386,8 +424,8 @@ export default function Home() {
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
         >
           <img
-            src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=2000&q=85"
-            alt="A calm, naturally layered interior"
+            src={craftsmanshipKitchen}
+            alt="Contemporary kitchen finished with careful attention to detail"
             loading="lazy"
           />
         </motion.div>
@@ -398,12 +436,12 @@ export default function Home() {
           viewport={{ once: true, amount: 0.35 }}
           variants={reveal}
         >
-          <p className="section-eyebrow">Rooted in Panipat</p>
+          <p className="section-eyebrow">Designed with intention</p>
           <h2>Thoughtful by nature.<br /><em>Beautiful by design.</em></h2>
           <p className="craft-copy__body">
-            We bring together thoughtful design and textile craftsmanship to
-            create fabrics for the way people really live. Personal, enduring,
-            and made to be lived with.
+            We bring together considered layouts, refined materials, and
+            intelligent storage to create kitchens that feel personal and work
+            beautifully, every day.
           </p>
           <Link to="/about" className="text-link">
             Get to know us <ArrowRight size={16} aria-hidden="true" />
@@ -419,13 +457,13 @@ export default function Home() {
           viewport={{ once: true, amount: 0.35 }}
           variants={reveal}
         >
-          <p className="section-eyebrow">A space of your own</p>
-          <h2>Let’s make something<br /><em>feel like home.</em></h2>
+          <p className="section-eyebrow">Your space, thoughtfully reimagined</p>
+          <h2>Let’s design a kitchen<br /><em>that feels like yours.</em></h2>
           <Link to="/contact" className="home-contact__button">
-            Start a conversation <ArrowUpRight size={18} aria-hidden="true" />
+            Book a consultation <ArrowUpRight size={18} aria-hidden="true" />
           </Link>
         </motion.div>
       </section>
-    </div>
+    </main>
   );
 }
