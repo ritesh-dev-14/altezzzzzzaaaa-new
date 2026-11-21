@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion, useMotionValueEvent, useScroll, useTransform } from 'framer-motion';
+import { ArrowUpRight } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import kitchenOne from '../../images/kitchen-01.avif';
 import kitchenTwo from '../../images/kitchen-02.avif';
@@ -17,9 +18,7 @@ const COLLECTIONS = [
     subtitle: 'A balanced meeting of form and function',
     desc: 'A tailored modular kitchen brings clean architectural lines together with practical work zones, refined finishes, and space to gather.',
     image: heroKitchen,
-    badge: 'Made around you',
     specs: ['Layout planned for your space', 'Island and peninsula options', 'Coordinated cabinetry and work surfaces'],
-    colors: ['#EDE7D9', '#8C745B', '#343430'],
   },
   {
     id: 2,
@@ -28,9 +27,7 @@ const COLLECTIONS = [
     subtitle: 'Quiet lines, natural character',
     desc: 'A thoughtful mix of warm wood tones and calm surfaces creates a contemporary kitchen with a welcoming, lived-in feel.',
     image: kitchenTwo,
-    badge: 'Considered materials',
     specs: ['Wood-look and neutral finish palettes', 'Integrated storage planning', 'Details coordinated across the space'],
-    colors: ['#C4A980', '#E3D8C8', '#77736B'],
   },
   {
     id: 3,
@@ -39,9 +36,7 @@ const COLLECTIONS = [
     subtitle: 'A considered place for everything',
     desc: 'Bring order to the kitchen with cabinetry designed to make everyday essentials easy to reach and the room feel beautifully resolved.',
     image: kitchenWardrobe,
-    badge: 'Thoughtful storage',
     specs: ['Storage planned around daily routines', 'Open and closed storage options', 'Finish choices that complement your kitchen'],
-    colors: ['#D8C4A7', '#8A735E', '#F3F0E8'],
   },
   {
     id: 4,
@@ -50,9 +45,7 @@ const COLLECTIONS = [
     subtitle: 'Texture, tone, and lasting appeal',
     desc: 'Explore a considered language of cabinetry, worktop, and hardware finishes to bring warmth and character to your kitchen.',
     image: kitchenOne,
-    badge: 'A personal palette',
     specs: ['Coordinated surface and cabinet tones', 'Natural and contemporary textures', 'Selected to suit your overall design'],
-    colors: ['#E6DFD2', '#9A8061', '#56544F'],
   },
   {
     id: 5,
@@ -61,18 +54,73 @@ const COLLECTIONS = [
     subtitle: 'The useful details, thoughtfully placed',
     desc: 'Make the most of your kitchen with storage ideas that bring everyday tools, ingredients, and essentials into easy reach.',
     image: storageDetail,
-    badge: 'Designed for daily use',
     specs: ['Storage zones planned with your layout', 'Space-conscious cabinet interiors', 'A place for everyday essentials'],
-    colors: ['#B69A76', '#E8E2D6', '#6D675D'],
   },
 ];
 
+function CollectionImageLayer({ item, index, count, progress }) {
+  const segment = 1 / count;
+  const fade = segment * 0.26;
+  let inputRange;
+  let outputRange;
+
+  if (count === 1) {
+    inputRange = [0, 1];
+    outputRange = [1, 1];
+  } else if (index === 0) {
+    inputRange = [0, segment - fade / 2, segment + fade / 2];
+    outputRange = [1, 1, 0];
+  } else {
+    const fadeStart = index * segment - fade / 2;
+    const fadeEnd = index * segment + fade / 2;
+    inputRange = [fadeStart, fadeEnd, 1];
+    outputRange = [0, 1, 1];
+  }
+
+  const opacity = useTransform(progress, inputRange, outputRange);
+  return (
+    <motion.div
+      className="collection-gallery__image-layer"
+      style={{ opacity, zIndex: index + 1 }}
+      aria-hidden="true"
+    >
+      <img
+        src={item.image}
+        alt=""
+        className="collection-gallery__image-backdrop"
+        loading={index === 0 ? 'eager' : 'lazy'}
+      />
+      <motion.img
+        src={item.image}
+        alt=""
+        className="collection-gallery__image"
+        loading={index === 0 ? 'eager' : 'lazy'}
+        fetchPriority={index === 0 ? 'high' : 'auto'}
+      />
+    </motion.div>
+  );
+}
+
 export default function Collections() {
+  const galleryRef = useRef(null);
   const location = useLocation();
   const [activeCategory, setActiveCategory] = useState(
     CATEGORIES.includes(location.state?.category) ? location.state.category : 'All'
   );
+  const [activeSceneIndex, setActiveSceneIndex] = useState(0);
   const [selectedItem, setSelectedItem] = useState(null);
+  const filteredCollections = activeCategory === 'All'
+    ? COLLECTIONS
+    : COLLECTIONS.filter((item) => item.category === activeCategory);
+  const { scrollYProgress } = useScroll({
+    target: galleryRef,
+    offset: ['start start', 'end end'],
+  });
+  const activeItem = filteredCollections[Math.min(activeSceneIndex, filteredCollections.length - 1)];
+
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, []);
 
   useEffect(() => {
     if (CATEGORIES.includes(location.state?.category)) {
@@ -80,118 +128,122 @@ export default function Collections() {
     }
   }, [location.state]);
 
-  const filteredCollections = activeCategory === 'All'
-    ? COLLECTIONS
-    : COLLECTIONS.filter((item) => item.category === activeCategory);
+  useEffect(() => {
+    setActiveSceneIndex(0);
+  }, [activeCategory]);
+
+  useMotionValueEvent(scrollYProgress, 'change', (progress) => {
+    const nextIndex = Math.min(
+      filteredCollections.length - 1,
+      Math.floor(progress * filteredCollections.length)
+    );
+    setActiveSceneIndex((currentIndex) => (
+      currentIndex === nextIndex ? currentIndex : nextIndex
+    ));
+  });
+
+  const handleCategoryChange = (category) => {
+    setActiveCategory(category);
+    setActiveSceneIndex(0);
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  };
 
   return (
-    <main className="py-24 bg-[#FAF8F5] min-h-screen text-[#222222]">
-      <div className="max-w-7xl mx-auto px-6 md:px-12">
-        <header className="text-center mb-16">
-          <motion.span
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-xs uppercase tracking-[0.3em] text-[#C5A059] font-medium block mb-3"
-          >
-            ALTEZZA · KITCHEN WARDROBE
-          </motion.span>
-          <motion.h1
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-4xl md:text-6xl font-serif font-light text-[#1A1A1A] mb-5 tracking-tight"
-          >
-            Kitchens, made personal
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="text-gray-600 max-w-2xl mx-auto font-light leading-relaxed text-base md:text-lg"
-          >
-            Explore modular kitchens and kitchen wardrobes shaped by considered
-            layouts, purposeful storage, and materials chosen to feel at home.
-          </motion.p>
-          <div className="h-[2px] w-16 bg-[#C5A059] mx-auto mt-8 opacity-70" />
-        </header>
-
-        <div className="flex flex-wrap justify-center gap-3 md:gap-4 mb-16" aria-label="Filter kitchen designs">
-          {CATEGORIES.map((category) => (
-            <button
-              key={category}
-              type="button"
-              onClick={() => setActiveCategory(category)}
-              aria-pressed={activeCategory === category}
-              className={`px-5 py-2 text-xs md:text-sm uppercase tracking-wider rounded-full transition-all duration-300 ${
-                activeCategory === category
-                  ? 'bg-[#1A1A1A] text-white'
-                  : 'bg-white text-gray-600 hover:bg-gray-100 hover:text-black border border-gray-200/60'
-              }`}
-            >
-              {category}
-            </button>
+    <main className="collection-page">
+      <section
+        ref={galleryRef}
+        className="collection-gallery"
+        style={{ height: `${(filteredCollections.length + 1) * 100}svh` }}
+        aria-label="Explore Altezza concepts"
+      >
+        <div className="collection-gallery__stage">
+          {filteredCollections.map((item, index) => (
+            <CollectionImageLayer
+              key={item.id}
+              item={item}
+              index={index}
+              count={filteredCollections.length}
+              progress={scrollYProgress}
+            />
           ))}
-        </div>
+          <div className="collection-gallery__shade" />
 
-        <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          <AnimatePresence>
-            {filteredCollections.map((item) => (
-              <motion.button
-                type="button"
-                layout
-                key={item.id}
-                initial={{ opacity: 0, y: 20 }}
+          <div className="collection-gallery__content">
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div
+                key={activeItem.id}
+                className="collection-gallery__copy"
+                initial={{ opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.4 }}
-                onClick={() => setSelectedItem(item)}
-                className="group text-left cursor-pointer bg-white overflow-hidden border border-black/5 flex flex-col"
-                aria-label={`View ${item.title}`}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
               >
-                <div className="relative overflow-hidden aspect-[4/5] bg-gray-100">
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    loading="lazy"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                <p className="collection-gallery__eyebrow">
+                  CONCEPT · {activeItem.category}
+                </p>
+                <h1>{activeItem.title}</h1>
+                <p className="collection-gallery__subtitle">{activeItem.subtitle}</p>
+                <button
+                  type="button"
+                  className="collection-gallery__explore"
+                  onClick={() => setSelectedItem(activeItem)}
+                >
+                  Explore this design <ArrowUpRight size={17} aria-hidden="true" />
+                </button>
+              </motion.div>
+            </AnimatePresence>
+
+            <div
+              className="collection-gallery__progress"
+              role="img"
+              aria-label={`Concept ${activeSceneIndex + 1} of ${filteredCollections.length}`}
+            >
+              <span className="collection-gallery__progress-current">
+                <AnimatePresence mode="popLayout" initial={false}>
+                  <motion.span
+                    key={activeSceneIndex}
+                    initial={{ opacity: 0, y: '100%' }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: '-100%' }}
+                    transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    {String(activeSceneIndex + 1).padStart(2, '0')}
+                  </motion.span>
+                </AnimatePresence>
+              </span>
+              <span className="collection-gallery__progress-total">
+                / {String(filteredCollections.length).padStart(2, '0')}
+              </span>
+              <span className="collection-gallery__progress-ticks" aria-hidden="true">
+                {filteredCollections.map((item, index) => (
+                  <span
+                    key={item.id}
+                    className={index === activeSceneIndex ? 'is-active' : ''}
                   />
-                  <span className="absolute top-4 left-4 bg-white/90 text-[10px] uppercase tracking-widest text-[#1A1A1A] font-semibold px-3 py-1.5">
-                    {item.badge}
-                  </span>
-                  <span className="absolute bottom-4 right-4 bg-white/95 text-xs uppercase tracking-widest font-medium text-[#1A1A1A] px-4 py-2">
-                    Explore design
-                  </span>
-                </div>
-                <div className="p-7 flex flex-col flex-grow justify-between">
-                  <div>
-                    <span className="text-[11px] uppercase tracking-widest text-[#9A7410] font-semibold">{item.category}</span>
-                    <h2 className="text-2xl font-serif text-[#1A1A1A] mt-2 mb-2 group-hover:text-[#9A7410] transition-colors">
-                      {item.title}
-                    </h2>
-                    <p className="text-gray-500 text-sm leading-relaxed mb-5">{item.desc}</p>
-                  </div>
-                  <div className="pt-4 border-t border-gray-100 flex items-center justify-between">
-                    <span className="text-[11px] text-gray-500 uppercase tracking-wider">Finish palette</span>
-                    <div className="flex gap-1.5" aria-label="Suggested finish palette">
-                      {item.colors.map((color) => (
-                        <span
-                          key={color}
-                          className="w-3.5 h-3.5 rounded-full border border-black/10"
-                          style={{ backgroundColor: color }}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </motion.button>
-            ))}
-          </AnimatePresence>
-        </motion.div>
-      </div>
+                ))}
+              </span>
+            </div>
+
+            <div className="collection-gallery__filters" role="group" aria-label="Filter concepts">
+              {CATEGORIES.map((category) => (
+                <button
+                  key={category}
+                  type="button"
+                  onClick={() => handleCategoryChange(category)}
+                  aria-pressed={activeCategory === category}
+                  className={`collection-gallery__filter${activeCategory === category ? ' is-active' : ''}`}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
 
       <AnimatePresence>
         {selectedItem && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8">
+          <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 md:p-8">
             <motion.button
               type="button"
               aria-label="Close design details"
@@ -211,7 +263,11 @@ export default function Collections() {
               className="relative bg-white max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl z-10 grid md:grid-cols-2"
             >
               <div className="relative min-h-64 md:min-h-full">
-                <img src={selectedItem.image} alt={selectedItem.title} className="absolute inset-0 w-full h-full object-cover" />
+                <img
+                  src={selectedItem.image}
+                  alt={selectedItem.title}
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
               </div>
               <div className="p-8 md:p-12 flex flex-col justify-between">
                 <div>

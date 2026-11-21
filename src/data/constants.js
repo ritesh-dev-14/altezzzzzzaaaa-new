@@ -1,7 +1,7 @@
 export const NAV_LINKS = [
   { name: 'Home', path: '/' },
   { name: 'Our approach', path: '/about' },
-  { name: 'Kitchens & wardrobes', path: '/collections' },
+  { name: 'Concepts', path: '/collections' },
   { name: 'Design partners', path: '/b2b-hospitality' },
   { name: 'Consultation', path: '/contact' },
 ];
