@@ -9,7 +9,7 @@ export default {
       colors: {
         gold: '#C4A45C',
         charcoal: '#1A1A1A',
-        cream: '#F9F8F6'
+        cream: '#E5D9C7'
       },
       fontFamily: {
         sans: ['DM Sans', 'sans-serif'],

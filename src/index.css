@@ -95,7 +95,7 @@
   overflow: hidden;
   background:
     radial-gradient(ellipse at center, rgba(230, 181, 26, 0.12), transparent 48%),
-    #f8f6ef;
+    #e5d9c7;
   opacity: 1;
   transition: opacity 650ms ease, visibility 650ms ease;
 }
@@ -253,7 +253,7 @@
   position: sticky;
   top: 0;
   z-index: 60;
-  background: rgba(248, 246, 239, 0.98);
+  background: rgba(229, 217, 199, 0.98);
   color: #171717;
   border-bottom: 1px solid rgba(23, 23, 23, 0.12);
   backdrop-filter: blur(14px);
@@ -392,7 +392,7 @@
   justify-content: space-between;
   padding: clamp(24px, 4vw, 48px) clamp(24px, 7vw, 104px) 28px;
   overflow-y: auto;
-  background: #f8f6ef;
+  background: #e5d9c7;
   box-shadow: -24px 0 70px rgba(0, 0, 0, 0.18);
   color: #171717;
 }
@@ -836,14 +836,14 @@ html.lenis body {
 .home-page {
   /* overflow:clip allows position:sticky to work while keeping marquee contained */
   overflow-x: clip;
-  background: #FAF8F5;
+  background: #e5d9c7;
   color: #24221f;
 }
 
 .home-hero {
   position: relative;
   height: 400svh;
-  background: #FAF8F5;
+  background: #e5d9c7;
   color: #24221f;
 }
 
@@ -856,7 +856,7 @@ html.lenis body {
   height: calc(100svh - 82px);
   width: 100%;
   overflow: hidden;
-  background: #FAF8F5;
+  background: #e5d9c7;
   isolation: isolate;
 }
 
@@ -1566,7 +1566,7 @@ html.lenis body {
   place-items: center;
   overflow: hidden;
   padding: 48px clamp(24px, 6vw, 88px);
-  background: #f5f2ec;
+  background: #e5d9c7;
   color: #24221f;
 }
 
@@ -1723,7 +1723,7 @@ html.lenis body {
 .collection-scroll {
   position: relative;
   height: 320svh;
-  background: #f5f2ec;
+  background: #e5d9c7;
 }
 
 .collection-scroll__stage {
@@ -1737,7 +1737,7 @@ html.lenis body {
   padding: clamp(14px, 2vh, 24px) 0;
   box-sizing: border-box;
   overflow: hidden;
-  background: #f5f2ec;
+  background: #e5d9c7;
 }
 
 .collection-scroll__header {
@@ -2141,7 +2141,7 @@ html.lenis body {
   align-items: center;
   gap: clamp(48px, 8vw, 120px);
   padding: 100px clamp(24px, 10vw, 150px) 120px;
-  background: #e9e5dd;
+  background: #e5d9c7;
 }
 
 .craft-image {
