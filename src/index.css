@@ -1394,6 +1394,80 @@ html.lenis body {
   }
 }
 
+/* ─── Materiality Scroll Stage ─── */
+.materiality-scroll {
+  position: relative;
+  height: 280svh;
+  background: #0f0e0d;
+}
+
+.materiality-scroll__stage {
+  position: sticky;
+  top: 82px;
+  min-height: calc(100svh - 82px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  overflow: hidden;
+  background: #0f0e0d;
+  box-sizing: border-box;
+}
+
+@media (max-height: 740px) {
+  .materiality-scroll__stage {
+    padding: 24px 0;
+  }
+}
+
+/* ─── Pinned Process Cards Pop-Up Scrub ("The Altezza Experience") ─── */
+.process-scroll {
+  position: relative;
+  height: 250svh;
+  background: #141312;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.process-scroll__stage {
+  position: sticky;
+  top: 82px;
+  height: calc(100svh - 82px);
+  min-height: calc(100svh - 82px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  overflow: hidden;
+  background: #141312;
+  box-sizing: border-box;
+}
+
+.process-card {
+  position: relative;
+  min-height: 230px;
+  will-change: transform, opacity;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .process-scroll {
+    height: auto;
+    padding: 80px 0;
+  }
+  .process-scroll__stage {
+    position: relative;
+    top: 0;
+    height: auto;
+    min-height: auto;
+  }
+  .process-card {
+    opacity: 1 !important;
+    transform: none !important;
+    border-color: rgba(255, 255, 255, 0.12) !important;
+    background: rgba(255, 255, 255, 0.03) !important;
+  }
+}
+
 .fullscreen-feature__frame {
   position: relative;
   width: 100%;
@@ -1643,6 +1717,254 @@ html.lenis body {
 .spaces-showcase__link:hover {
   gap: 18px;
   color: #c4a45c;
+}
+
+/* ─── Pinned Horizontal Collection Scroll ("Spaces that make room for life") ─── */
+.collection-scroll {
+  position: relative;
+  height: 320svh;
+  background: #f5f2ec;
+}
+
+.collection-scroll__stage {
+  position: sticky;
+  top: 82px;
+  height: calc(100svh - 82px);
+  max-height: calc(100svh - 82px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(14px, 2vh, 24px) 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  background: #f5f2ec;
+}
+
+.collection-scroll__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
+  width: 100%;
+  padding: 0 clamp(24px, 5vw, 72px);
+  box-sizing: border-box;
+  margin: 0 auto clamp(14px, 2vh, 24px);
+  flex-shrink: 0;
+}
+
+.collection-scroll__title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(28px, 3.2vw, 44px);
+  line-height: 1.08;
+  font-weight: 400;
+  color: #171715;
+  margin: 0;
+}
+
+.collection-scroll__title em {
+  font-style: italic;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+.collection-scroll__meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  text-align: right;
+}
+
+.collection-scroll__note {
+  max-width: 420px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: #6e6b63;
+  margin: 0;
+}
+
+.collection-scroll__indicator {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.collection-scroll__indicator-label {
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: #9c7600;
+  text-transform: uppercase;
+}
+
+.collection-scroll__progress-rail {
+  width: 80px;
+  height: 2px;
+  background: rgba(23, 23, 21, 0.12);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.collection-scroll__progress-bar {
+  height: 100%;
+  background: #9c7600;
+  border-radius: 2px;
+  transition: width 0.08s linear;
+}
+
+.collection-scroll__viewport {
+  width: 100%;
+  overflow: visible;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  min-height: 0;
+}
+
+.collection-scroll__track {
+  display: flex;
+  gap: clamp(24px, 3.5vw, 44px);
+  padding: 0 clamp(24px, 5vw, 72px);
+  will-change: transform;
+  align-items: stretch;
+}
+
+.collection-scroll-card {
+  flex: 0 0 clamp(440px, 46vw, 640px);
+  display: flex;
+  flex-direction: column;
+}
+
+.collection-scroll-card__link {
+  display: flex;
+  flex-direction: column;
+  color: inherit;
+  text-decoration: none;
+  height: 100%;
+}
+
+.collection-scroll-card__image-wrap {
+  position: relative;
+  height: clamp(320px, 46vh, 480px);
+  overflow: hidden;
+  border-radius: 8px;
+  background: #ded8ce;
+  box-shadow: 0 16px 40px rgba(23, 23, 21, 0.09);
+}
+
+.collection-scroll-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.collection-scroll-card__link:hover .collection-scroll-card__img {
+  transform: scale(1.06) !important;
+}
+
+.collection-scroll-card__image-wrap::after {
+  position: absolute;
+  inset: 40% 0 0;
+  background: linear-gradient(180deg, transparent, rgba(20, 18, 15, 0.35));
+  content: '';
+  opacity: 0.7;
+  pointer-events: none;
+  transition: opacity 350ms ease;
+}
+
+.collection-scroll-card__link:hover .collection-scroll-card__image-wrap::after {
+  opacity: 1;
+}
+
+.collection-scroll-card__caption {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding-top: 14px;
+}
+
+.collection-scroll-card__name {
+  margin: 0;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(24px, 2.4vw, 32px);
+  font-weight: 400;
+  line-height: 1.1;
+  color: #171715;
+}
+
+.collection-scroll-card__detail {
+  margin: 4px 0 0;
+  color: #77736c;
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 1.5;
+}
+
+/* Finale CTA Card */
+.collection-scroll-card--cta {
+  flex: 0 0 clamp(340px, 32vw, 440px);
+  background: #ebe6dc;
+  border-radius: 8px;
+  border: 1px solid rgba(23, 23, 21, 0.08);
+  box-shadow: 0 16px 40px rgba(23, 23, 21, 0.05);
+}
+
+.collection-scroll-card__cta-inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(28px, 5vh, 44px) clamp(24px, 3vw, 36px);
+  height: 100%;
+  color: inherit;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.collection-scroll-card__cta-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(30px, 3vw, 40px);
+  line-height: 1.1;
+  color: #171715;
+  margin: 14px 0 10px;
+}
+
+.collection-scroll-card__cta-desc {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: #77736c;
+  margin-bottom: 24px;
+}
+
+.collection-scroll-card__cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #9c7600;
+  transition: gap 0.3s ease;
+}
+
+.collection-scroll-card__cta-inner:hover .collection-scroll-card__cta-btn {
+  gap: 14px;
+}
+
+@media (max-width: 820px) {
+  .collection-scroll__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .collection-scroll__meta {
+    align-items: flex-start;
+    text-align: left;
+  }
+  .collection-scroll-card {
+    flex: 0 0 85vw;
+  }
 }
 
 .collection-section {

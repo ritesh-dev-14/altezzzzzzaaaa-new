@@ -174,50 +174,133 @@ function MagneticButton({ children, className = '' }) {
   );
 }
 
-function CollectionCard({ item, index }) {
-  const cardRef = useRef(null);
-  const reduceMotion = useReducedMotion();
-  const { scrollYProgress } = useScroll({
-    target: cardRef,
-    offset: ['start 90%', 'end 10%'],
-  });
-  const imageY = useTransform(scrollYProgress, [0, 1], reduceMotion ? ['0%', '0%'] : ['7%', '-7%']);
-  const imageScale = useTransform(scrollYProgress, [0, 0.45, 1], reduceMotion ? [1, 1, 1] : [1.08, 1, 1.04]);
-  const imageReveal = useTransform(
-    scrollYProgress,
-    [0, 0.35, 1],
-    reduceMotion ? ['inset(0)', 'inset(0)', 'inset(0)'] : ['inset(12% 0 12% 0)', 'inset(0)', 'inset(0)']
-  );
+function CollectionsScrollSection() {
+  const sectionRef = useRef(null);
+  const trackRef = useRef(null);
+  const stageRef = useRef(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    const track = trackRef.current;
+    const stage = stageRef.current;
+    if (!section || !track || !stage) return;
+
+    const getScrollAmount = () => {
+      const trackWidth = track.scrollWidth;
+      const stageWidth = stage.clientWidth;
+      const dist = trackWidth - stageWidth + 60;
+      return -Math.max(0, dist);
+    };
+
+    const gsapCtx = gsap.context(() => {
+      gsap.to(track, {
+        x: getScrollAmount,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: section,
+          start: 'top 82px',
+          end: 'bottom bottom',
+          scrub: 1,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            setScrollProgress(self.progress);
+          },
+        },
+      });
+    }, section);
+
+    const timer = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 200);
+
+    return () => {
+      clearTimeout(timer);
+      gsapCtx.revert();
+    };
+  }, []);
 
   return (
-    <motion.article
-      ref={cardRef}
-      className={`collection-card${index === 1 ? ' collection-card--offset' : ''}`}
-      initial={{ opacity: 0, y: 48 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.15 }}
-      transition={{ duration: 0.8, delay: index * 0.12, ease: [0.22, 1, 0.36, 1] }}
-    >
-      <Link to="/collections" className="collection-card__link">
-        <div className="collection-card__image">
-          <motion.img
-            src={item.image}
-            alt={`${item.name} kitchen design`}
-            loading="lazy"
-            style={{ y: imageY, scale: imageScale, clipPath: imageReveal }}
-          />
-          <span className="collection-card__arrow"><ArrowUpRight size={20} /></span>
-          <span className="collection-card__image-label">ALTEZZA</span>
-        </div>
-        <div className="collection-card__caption">
-          <span className="collection-card__number">{item.number}</span>
+    <section ref={sectionRef} className="collection-scroll" aria-label="Altezza collections">
+      <div ref={stageRef} className="collection-scroll__stage">
+        {/* Architectural Header */}
+        <div className="collection-scroll__header">
           <div>
-            <h3>{item.name}</h3>
-            <p>{item.detail}</p>
+            <p className="section-eyebrow">Made around the way you live</p>
+            <h2 className="collection-scroll__title">
+              Spaces that<br /><em>make room for life.</em>
+            </h2>
+          </div>
+          <div className="collection-scroll__meta">
+            <p className="collection-scroll__note">
+              From the layout to the last detail, explore kitchens shaped around
+              your routines, your space, and your point of view.
+            </p>
+            <div className="collection-scroll__indicator">
+              <span className="collection-scroll__indicator-label">SCROLL TO EXPLORE</span>
+              <div className="collection-scroll__progress-rail">
+                <div
+                  className="collection-scroll__progress-bar"
+                  style={{ width: `${Math.round(scrollProgress * 100)}%` }}
+                />
+              </div>
+            </div>
           </div>
         </div>
-      </Link>
-    </motion.article>
+
+        {/* Horizontal Moving Cards Track */}
+        <div className="collection-scroll__viewport">
+          <div ref={trackRef} className="collection-scroll__track">
+            {collections.map((item) => (
+              <article key={item.number} className="collection-scroll-card">
+                <Link to="/collections" className="collection-scroll-card__link">
+                  <div className="collection-scroll-card__image-wrap">
+                    <img
+                      src={item.image}
+                      alt={`${item.name} kitchen design`}
+                      loading="lazy"
+                      className="collection-scroll-card__img"
+                      style={{
+                        transform: `scale(1.08) translateX(${(scrollProgress - 0.5) * -30}px)`,
+                      }}
+                    />
+                    <span className="collection-card__arrow">
+                      <ArrowUpRight size={20} />
+                    </span>
+                    <span className="collection-card__image-label">ALTEZZA</span>
+                  </div>
+                  <div className="collection-scroll-card__caption">
+                    <span className="collection-card__number">{item.number}</span>
+                    <div>
+                      <h3 className="collection-scroll-card__name">{item.name}</h3>
+                      <p className="collection-scroll-card__detail">{item.detail}</p>
+                    </div>
+                  </div>
+                </Link>
+              </article>
+            ))}
+
+            {/* Finale "Explore All Collections" Card */}
+            <article className="collection-scroll-card collection-scroll-card--cta">
+              <Link to="/collections" className="collection-scroll-card__cta-inner">
+                <div>
+                  <span className="section-eyebrow text-[#9c7600] block mb-2">CATALOGUE</span>
+                  <h3 className="collection-scroll-card__cta-title">
+                    Explore all<br /><em>collections</em>
+                  </h3>
+                  <p className="collection-scroll-card__cta-desc">
+                    Immerse yourself in our complete architectural kitchen and wardrobe systems.
+                  </p>
+                </div>
+                <span className="collection-scroll-card__cta-btn">
+                  View Collections <ArrowRight size={18} />
+                </span>
+              </Link>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -552,72 +635,145 @@ function SpacesShowcase() {
 // --- NEW EXTENDED SECTIONS ---
 
 function MaterialitySection() {
+  const sectionRef = useRef(null);
   const [activeFinish, setActiveFinish] = useState(0);
-  const reduceMotion = useReducedMotion();
-  const finish = finishes[activeFinish];
+  const [segmentProgress, setSegmentProgress] = useState(0);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const proxy = { progress: 0 };
+    const gsapCtx = gsap.context(() => {
+      gsap.to(proxy, {
+        progress: 1,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: section,
+          start: 'top top',
+          end: 'bottom bottom',
+          scrub: true,
+          onUpdate: () => {
+            const p = proxy.progress;
+            const count = finishes.length;
+            // Map 0..1 scroll progress across finishes: 0, 1, 2
+            const rawIndex = p * count;
+            const index = Math.min(count - 1, Math.floor(rawIndex));
+            setActiveFinish(index);
+
+            // Progress within the current active segment (0..1)
+            const segP = Math.min(1, Math.max(0, rawIndex - index));
+            setSegmentProgress(segP);
+          },
+        },
+      });
+    }, section);
+
+    return () => {
+      gsapCtx.revert();
+    };
+  }, []);
+
+  const handleTabClick = (index) => {
+    setActiveFinish(index);
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const rect = section.getBoundingClientRect();
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const sectionTop = rect.top + scrollTop;
+    const scrollDistance = section.offsetHeight - window.innerHeight;
+    const segmentRatio = (index + 0.5) / finishes.length;
+    const targetY = sectionTop + scrollDistance * segmentRatio;
+
+    window.scrollTo({
+      top: targetY,
+      behavior: 'smooth',
+    });
+  };
 
   return (
-    <section className="materiality-section py-24 px-6 md:px-16 bg-[#0f0e0d] text-[#f7f5f0]" aria-label="Materiality and Finishes">
-      <div className="max-w-7xl mx-auto">
-        <motion.div
-          className="mb-16"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-          variants={reveal}
-        >
-          <p className="section-eyebrow text-xs tracking-[0.2em] uppercase text-[#a39e93] mb-3">
-            Uncompromising Materials
-          </p>
-          <h2 className="text-3xl md:text-5xl font-light tracking-tight">
-            Built from the ground up <br /><em>with tactile permanence.</em>
-          </h2>
-        </motion.div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          <div className="lg:col-span-5 flex flex-col space-y-4">
-            {finishes.map((item, index) => (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => setActiveFinish(index)}
-                className={`text-left p-6 transition-all duration-500 border-l-2 ${activeFinish === index
-                  ? 'border-[#f7f5f0] bg-white/5 pl-8'
-                  : 'border-white/10 opacity-50 hover:opacity-100'
-                  }`}
-              >
-                <span className="text-xs uppercase tracking-widest text-[#a39e93] block mb-1">
-                  0{index + 1} · {item.category}
-                </span>
-                <h3 className="text-xl md:text-2xl font-light">{item.name}</h3>
-              </button>
-            ))}
+    <section
+      ref={sectionRef}
+      className="materiality-scroll"
+      aria-label="Materiality and Finishes"
+    >
+      <div className="materiality-scroll__stage">
+        <div className="max-w-7xl mx-auto w-full px-6 md:px-16">
+          <div className="mb-10 md:mb-14">
+            <p className="section-eyebrow text-xs tracking-[0.2em] uppercase text-[#a39e93] mb-3">
+              Uncompromising Materials
+            </p>
+            <h2 className="text-3xl md:text-5xl font-light tracking-tight text-[#f7f5f0]">
+              Built from the ground up <br />
+              <em className="font-serif italic">with tactile permanence.</em>
+            </h2>
           </div>
 
-          <div className="lg:col-span-7 relative h-[420px] md:h-[520px] overflow-hidden rounded-lg bg-neutral-900">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={finish.id}
-                initial={{ opacity: 0, scale: reduceMotion ? 1 : 1.05 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: reduceMotion ? 1 : 0.98 }}
-                transition={{ duration: reduceMotion ? 0.01 : 0.7, ease: [0.22, 1, 0.36, 1] }}
-                className="absolute inset-0"
-              >
-                <img
-                  src={finish.image}
-                  alt={finish.name}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
-                <div className="absolute bottom-8 left-8 right-8">
-                  <p className="text-sm md:text-base text-[#d1ccc0] font-light max-w-xl leading-relaxed">
-                    {finish.description}
-                  </p>
-                </div>
-              </motion.div>
-            </AnimatePresence>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+            {/* Left buttons (active indicator tracks scroll) */}
+            <div className="lg:col-span-5 flex flex-col space-y-4">
+              {finishes.map((item, index) => {
+                const isActive = activeFinish === index;
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => handleTabClick(index)}
+                    className={`relative text-left p-6 rounded-sm transition-all duration-500 border-l-2 overflow-hidden ${
+                      isActive
+                        ? 'border-[#f7f5f0] bg-white/[0.07] pl-8 text-[#f7f5f0]'
+                        : 'border-white/10 opacity-40 hover:opacity-85 pl-6 text-[#d1ccc0]'
+                    }`}
+                  >
+                    {/* Active progress rail on the left border */}
+                    {isActive && (
+                      <span
+                        className="materiality-progress-bar absolute bottom-0 left-[-2px] w-[2px] bg-[#c5a059] transition-all duration-75"
+                        style={{ height: `${segmentProgress * 100}%` }}
+                        aria-hidden="true"
+                      />
+                    )}
+                    <span className="text-xs uppercase tracking-widest text-[#a39e93] block mb-1.5">
+                      0{index + 1} · {item.category}
+                    </span>
+                    <h3 className="text-xl md:text-2xl font-light tracking-wide">
+                      {item.name}
+                    </h3>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Right crossfading image stage */}
+            <div className="lg:col-span-7 relative h-[380px] sm:h-[440px] md:h-[500px] overflow-hidden rounded-lg bg-neutral-900 shadow-2xl">
+              {finishes.map((item, index) => {
+                const isActive = activeFinish === index;
+                return (
+                  <div
+                    key={item.id}
+                    className={`absolute inset-0 transition-all duration-700 ease-out ${
+                      isActive
+                        ? 'opacity-100 scale-100 z-10 pointer-events-auto'
+                        : 'opacity-0 scale-[1.04] z-0 pointer-events-none'
+                    }`}
+                  >
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+                    <div className="absolute bottom-6 md:bottom-8 left-6 md:left-8 right-6 md:right-8">
+                      <p className="text-sm md:text-base text-[#d1ccc0] font-light max-w-xl leading-relaxed">
+                        {item.description}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
@@ -626,49 +782,103 @@ function MaterialitySection() {
 }
 
 function ProcessSection() {
+  const sectionRef = useRef(null);
+  const cardRefs = useRef([]);
   const reduceMotion = useReducedMotion();
 
-  return (
-    <section className="process-section py-24 px-6 md:px-16 bg-[#141312] text-[#f7f5f0] border-t border-white/10" aria-label="Our Process">
-      <div className="max-w-7xl mx-auto">
-        <motion.div
-          className="flex flex-col md:flex-row md:items-end justify-between mb-16"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-          variants={reveal}
-        >
-          <div>
-            <p className="section-eyebrow text-xs tracking-[0.2em] uppercase text-[#a39e93] mb-3">
-              The Altezza Experience
-            </p>
-            <h2 className="text-3xl md:text-5xl font-light">
-              From vision <br /><em>to reality.</em>
-            </h2>
-          </div>
-          <p className="text-[#a39e93] max-w-sm mt-4 md:mt-0 text-sm leading-relaxed">
-            A collaborative journey dedicated to making your home feel effortlessly complete.
-          </p>
-        </motion.div>
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {processSteps.map((step, idx) => (
-            <motion.div
-              key={step.num}
-              initial={{ opacity: 0, y: reduceMotion ? 0 : 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.65, delay: idx * 0.14, ease: [0.22, 1, 0.36, 1] }}
-              whileHover={reduceMotion ? {} : { y: -6 }}
-              className="p-8 bg-white/[0.02] border border-white/10 rounded-lg flex flex-col justify-between hover:bg-white/[0.05] transition-colors"
-            >
-              <div>
-                <span className="text-xs font-mono text-[#a39e93] block mb-6">{step.num}</span>
-                <h3 className="text-xl font-light mb-3">{step.title}</h3>
-                <p className="text-sm text-[#b0a99c] leading-relaxed">{step.desc}</p>
+    const isDesktop = window.innerWidth >= 769;
+    if (!isDesktop || reduceMotion) return;
+
+    const cards = cardRefs.current.filter(Boolean);
+    if (cards.length !== 4) return;
+
+    const gsapCtx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: 'top 82px',
+          end: 'bottom bottom',
+          scrub: 0.6,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      cards.forEach((card, i) => {
+        tl.fromTo(
+          card,
+          {
+            opacity: 0.12,
+            y: 44,
+            scale: 0.9,
+            borderColor: 'rgba(255, 255, 255, 0.08)',
+            backgroundColor: 'rgba(255, 255, 255, 0.01)',
+          },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            borderColor: '#c5a059',
+            backgroundColor: 'rgba(255, 255, 255, 0.04)',
+            boxShadow: '0 16px 36px rgba(0, 0, 0, 0.35)',
+            duration: 0.25,
+            ease: 'back.out(1.6)',
+          },
+          i * 0.25
+        );
+      });
+    }, section);
+
+    return () => {
+      gsapCtx.revert();
+    };
+  }, [reduceMotion]);
+
+  return (
+    <section
+      ref={sectionRef}
+      className="process-scroll"
+      aria-label="Our Process"
+    >
+      <div className="process-scroll__stage">
+        <div className="max-w-7xl mx-auto w-full px-6 md:px-16">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-16">
+            <div>
+              <p className="section-eyebrow text-xs tracking-[0.2em] uppercase text-[#a39e93] mb-3">
+                The Altezza Experience
+              </p>
+              <h2 className="text-3xl md:text-5xl font-light text-[#f7f5f0]">
+                From vision <br /><em className="font-serif italic">to reality.</em>
+              </h2>
+            </div>
+            <p className="text-[#a39e93] max-w-sm mt-4 md:mt-0 text-sm leading-relaxed">
+              A collaborative journey dedicated to making your home feel effortlessly complete.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+            {processSteps.map((step, idx) => (
+              <div
+                key={step.num}
+                ref={(el) => (cardRefs.current[idx] = el)}
+                className="process-card p-8 rounded-lg flex flex-col justify-between transition-colors border"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-6">
+                    <span className="text-xs font-mono tracking-widest text-[#c5a059]">
+                      {step.num}
+                    </span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#c5a059]/50" />
+                  </div>
+                  <h3 className="text-xl font-light text-[#f7f5f0] mb-3">{step.title}</h3>
+                  <p className="text-sm text-[#b0a99c] leading-relaxed">{step.desc}</p>
+                </div>
               </div>
-            </motion.div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>
@@ -913,41 +1123,8 @@ export default function Home() {
       {/* 6. NEW: INTERACTIVE MATERIALITY & FINISHES EXPLORER */}
       <MaterialitySection />
 
-      {/* 7. COLLECTIONS GRID */}
-      <section className="collection-section">
-        <div className="collection-heading">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.4 }}
-            variants={reveal}
-          >
-            <p className="section-eyebrow">Made around the way you live</p>
-            <h2>Spaces that<br /><em>make room for life.</em></h2>
-          </motion.div>
-          <motion.p
-            className="collection-heading__note"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.4 }}
-            variants={reveal}
-          >
-            From the layout to the last detail, explore kitchens shaped around
-            your routines, your space, and your point of view.
-          </motion.p>
-        </div>
-
-        <div className="collection-grid">
-          {collections.map((item, index) => (
-            <CollectionCard item={item} index={index} key={item.number} />
-          ))}
-        </div>
-        <div className="collection-cta">
-          <Link to="/collections" className="text-link">
-            Explore all collections <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-        </div>
-      </section>
+      {/* 7. HORIZONTAL COLLECTIONS SCROLL */}
+      <CollectionsScrollSection />
 
       {/* 8. CRAFTSMANSHIP SECTION */}
       <section className="craft-section">
