@@ -42,7 +42,7 @@ export default function Contact() {
   };
 
   return (
-    <main className="bg-[#FAF8F5] text-[#1A1A1A] min-h-screen font-sans py-24 px-6 md:px-12">
+    <main className="contact-page min-h-screen font-sans py-24 px-6 md:px-12">
       <div className="max-w-7xl mx-auto">
         <header className="text-center mb-16">
           <motion.span

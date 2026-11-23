@@ -935,6 +935,7 @@ function PressAndTestimonials() {
 export default function Home() {
   const heroRef = useRef(null);
   const canvasRef = useRef(null);
+  const scrollCueRef = useRef(null);
   const reduceMotion = useReducedMotion();
 
   // Global top scroll progress bar
@@ -987,6 +988,10 @@ export default function Home() {
     // Render target frame with instant fallback to nearest loaded frame
     const render = (targetIndex) => {
       const idx = Math.max(0, Math.min(TOTAL - 1, Math.round(targetIndex)));
+      if (scrollCueRef.current) {
+        scrollCueRef.current.style.opacity = idx === 0 ? '1' : '0';
+      }
+
       const targetImg = images[idx];
       if (targetImg && targetImg.complete && targetImg.naturalWidth > 0) {
         currentRenderedIndex = idx;
@@ -1089,6 +1094,10 @@ export default function Home() {
             className="home-hero__canvas"
             aria-hidden="true"
           />
+          <div ref={scrollCueRef} className="home-hero__scroll">
+            <span>Scroll down to explore</span>
+            <ArrowDown size={15} aria-hidden="true" />
+          </div>
         </div>
       </section>
 

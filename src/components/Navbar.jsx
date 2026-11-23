@@ -8,9 +8,25 @@ import logo from '../../images/logo.png';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
   const toggleButtonRef = useRef(null);
   const closeButtonRef = useRef(null);
+
+  useEffect(() => {
+    const updateScrollState = () => {
+      const frameSequence = document.querySelector('.home-hero');
+      const colorThreshold = frameSequence
+        ? frameSequence.getBoundingClientRect().bottom + window.scrollY
+        : 24;
+
+      setIsScrolled(window.scrollY >= colorThreshold);
+    };
+    updateScrollState();
+    window.addEventListener('scroll', updateScrollState, { passive: true });
+
+    return () => window.removeEventListener('scroll', updateScrollState);
+  }, [location.pathname]);
 
   useEffect(() => {
     setIsOpen(false);
@@ -36,7 +52,7 @@ export default function Navbar() {
 
   return (
     <>
-    <header className="site-header">
+    <header className={`site-header${isScrolled ? ' is-scrolled' : ''}`}>
       <nav className="site-nav" aria-label="Main navigation">
         <Link to="/" className="site-nav__brand" aria-label="Altezza home">
           <img src={logo} alt="ALTEZZA — Kitchen Wardrobe" />

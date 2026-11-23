@@ -7,9 +7,9 @@ export default {
   theme: {
     extend: {
       colors: {
-        gold: '#C4A45C',
-        charcoal: '#1A1A1A',
-        cream: '#E5D9C7'
+        gold: '#E6B51A',
+        charcoal: '#F5F2EC',
+        cream: '#0D0D0C'
       },
       fontFamily: {
         sans: ['DM Sans', 'sans-serif'],

@@ -2444,8 +2444,10 @@ html.lenis body {
   .collection-card__image img,
   .home-round-link,
   .collection-card__arrow,
-  .text-link {
+  .text-link,
+  .home-hero__scroll svg {
     transition-duration: 1ms;
+    animation: none;
   }
 
   .home-marquee__track {
@@ -2705,4 +2707,389 @@ html.lenis body {
   .collection-gallery {
     margin-top: -71px;
   }
+}
+
+:root {
+  color-scheme: dark;
+  --brand-bg: #0d0d0c;
+  --brand-bg-deep: #090909;
+  --brand-surface: #141312;
+  --brand-surface-raised: #201e1a;
+  --brand-text: #f5f2ec;
+  --brand-muted: #bdb9ae;
+  --brand-gold: #e6b51a;
+}
+
+body {
+  background: var(--brand-bg);
+  color: var(--brand-text);
+}
+
+.bg-cream {
+  background-color: var(--brand-bg);
+}
+
+.bg-white {
+  background-color: var(--brand-surface);
+}
+
+.bg-charcoal {
+  background-color: var(--brand-surface);
+}
+
+.text-charcoal,
+.text-black {
+  color: var(--brand-text);
+}
+
+.site-header {
+  position: fixed;
+  inset: 0 0 auto;
+  background: transparent;
+  color: var(--brand-text);
+  border-bottom-color: transparent;
+  backdrop-filter: none;
+  transition: background 250ms ease, border-color 250ms ease, backdrop-filter 250ms ease;
+}
+
+.site-header.is-scrolled {
+  background: rgba(13, 13, 12, 0.94);
+  border-bottom-color: rgba(245, 242, 236, 0.12);
+  backdrop-filter: blur(14px);
+}
+
+.site-nav__note,
+.site-menu__bottom > span {
+  color: rgba(242, 239, 228, 0.62);
+}
+
+.site-nav__toggle:hover,
+.site-nav__toggle.is-open {
+  color: var(--brand-gold);
+}
+
+.site-nav__toggle,
+.site-menu__close {
+  color: var(--brand-text);
+}
+
+.site-menu {
+  background: var(--brand-bg);
+  color: var(--brand-text);
+}
+
+.site-menu__close {
+  border-color: rgba(242, 239, 228, 0.25);
+}
+
+.site-menu__links > div,
+.site-menu__links > div:first-child,
+.site-menu__bottom {
+  border-color: rgba(242, 239, 228, 0.16);
+}
+
+.site-menu__link {
+  color: rgba(242, 239, 228, 0.68);
+}
+
+.site-menu__link::before,
+.site-menu__close:hover {
+  background: var(--brand-gold);
+}
+
+.site-menu__eyebrow,
+.site-menu__number,
+.site-menu__bottom a {
+  color: var(--brand-gold);
+}
+
+.site-menu__link.is-current {
+  color: var(--brand-gold);
+}
+
+.site-menu__link:hover,
+.site-menu__link:focus-visible,
+.site-menu__link:hover .site-menu__number,
+.site-menu__link:focus-visible .site-menu__number {
+  color: var(--brand-bg-deep);
+}
+
+.site-menu__link:focus-visible::before {
+  transform: scaleY(1);
+}
+
+.splash-screen {
+  background:
+    radial-gradient(ellipse at center, rgba(230, 181, 26, 0.12), transparent 48%),
+    var(--brand-bg);
+}
+
+.splash-screen__tagline {
+  color: var(--brand-gold);
+}
+
+.site-footer {
+  background: var(--brand-bg-deep);
+  color: var(--brand-text);
+  border-top-color: var(--brand-gold);
+}
+
+.site-footer p,
+.site-footer span,
+.site-footer a {
+  color: var(--brand-muted);
+}
+
+.site-footer h3 {
+  color: var(--brand-text);
+}
+
+.site-footer a:hover {
+  color: var(--brand-gold);
+}
+
+.home-page,
+.home-hero,
+.home-hero__stage,
+.spaces-section,
+.collection-scroll,
+.collection-scroll__stage,
+.collection-section,
+.craft-section {
+  background-color: var(--brand-bg);
+  color: var(--brand-text);
+}
+
+.home-hero__stage {
+  top: 0;
+  height: 100svh;
+}
+
+.home-hero__scroll {
+  left: 50%;
+  bottom: 28px;
+  z-index: 2;
+  gap: 10px;
+  padding: 11px 15px;
+  border: 1px solid rgba(245, 242, 236, 0.32);
+  background: rgba(13, 13, 12, 0.48);
+  color: rgba(245, 242, 236, 0.92);
+  transform: translateX(-50%);
+  transition: opacity 250ms ease, border-color 250ms ease;
+  white-space: nowrap;
+}
+
+.home-hero__scroll svg {
+  animation: scroll-cue-bob 1.4s ease-in-out infinite;
+}
+
+@keyframes scroll-cue-bob {
+  0%,
+  100% {
+    transform: translateY(-2px);
+  }
+
+  50% {
+    transform: translateY(3px);
+  }
+}
+
+.home-marquee,
+.editorial-section,
+.fullscreen-feature-scroll,
+.fullscreen-feature-scroll__stage,
+.materiality-scroll,
+.materiality-scroll__stage,
+.process-scroll,
+.process-scroll__stage,
+.home-contact,
+.testimonials-section {
+  background-color: var(--brand-bg-deep);
+}
+
+.collection-scroll__title,
+.collection-scroll-card__name,
+.collection-scroll-card__cta-title,
+.spaces-showcase__item:hover,
+.spaces-showcase__item:focus-visible,
+.spaces-showcase__item.is-active,
+.spaces-showcase__link,
+.collection-heading h2,
+.collection-card__caption h3,
+.text-link {
+  color: var(--brand-text);
+}
+
+.collection-scroll__note,
+.collection-scroll-card__detail,
+.collection-scroll-card__cta-desc,
+.collection-heading__note,
+.collection-card__caption p,
+.craft-copy__body,
+.craft-caption {
+  color: var(--brand-muted);
+}
+
+.collection-scroll__indicator-label,
+.collection-scroll-card__cta-btn,
+.collection-card__number {
+  color: var(--brand-gold);
+}
+
+.collection-scroll__progress-rail {
+  background: rgba(242, 239, 228, 0.18);
+}
+
+.collection-scroll__progress-bar {
+  background: var(--brand-gold);
+}
+
+.collection-scroll-card__image-wrap,
+.collection-card__image,
+.craft-image {
+  background: var(--brand-surface);
+}
+
+.collection-scroll-card--cta {
+  background: var(--brand-surface);
+  border-color: rgba(242, 239, 228, 0.12);
+}
+
+.spaces-showcase__item,
+.spaces-showcase__item:first-child {
+  border-color: rgba(242, 239, 228, 0.22);
+  color: rgba(242, 239, 228, 0.64);
+}
+
+.spaces-showcase__item:hover,
+.spaces-showcase__item:focus-visible,
+.spaces-showcase__item.is-active,
+.spaces-showcase__item:first-child:hover,
+.spaces-showcase__item:first-child:focus-visible,
+.spaces-showcase__item:first-child.is-active {
+  border-color: rgba(242, 239, 228, 0.75);
+}
+
+.spaces-showcase__link {
+  border-bottom-color: var(--brand-gold);
+}
+
+.about-page .bg-white,
+.b2b-page .bg-white,
+.contact-page .bg-white,
+.collection-page .bg-white {
+  background-color: var(--brand-surface);
+}
+
+.about-page .bg-charcoal {
+  background-color: var(--brand-bg-deep);
+}
+
+.about-page .text-gray-600,
+.about-page .text-gray-700,
+.b2b-page .text-gray-600,
+.b2b-page .text-gray-700,
+.contact-page .text-gray-600,
+.contact-page .text-gray-700,
+.contact-page .text-gray-500,
+.contact-page .text-gray-400,
+.collection-page .text-gray-600,
+.collection-page .text-gray-500 {
+  color: var(--brand-muted);
+}
+
+.b2b-page,
+.contact-page {
+  background: var(--brand-bg);
+  color: var(--brand-text);
+}
+
+.b2b-page section.bg-white {
+  background-color: var(--brand-bg);
+}
+
+.b2b-page article.bg-white {
+  background-color: var(--brand-surface);
+  border-color: rgba(242, 239, 228, 0.12);
+}
+
+.b2b-page [class~="bg-white"] {
+  background-color: var(--brand-surface-raised);
+}
+
+.b2b-page [aria-pressed="true"] {
+  background: var(--brand-gold);
+  color: var(--brand-bg-deep);
+}
+
+.b2b-page [class~="text-[#1A1A1A]"] {
+  color: var(--brand-text);
+}
+
+.b2b-page [class~="text-[#9A7410]"],
+.b2b-page [class~="text-[#C5A059]"],
+.contact-page [class~="text-[#9A7410]"],
+.contact-page [class~="text-[#C5A059]"],
+.collection-page [class~="text-[#9A7410]"] {
+  color: var(--brand-gold);
+}
+
+.b2b-page [class*="hover:bg-[#9A7410]"]:hover,
+.contact-page [class*="hover:bg-[#9A7410]"]:hover,
+.collection-page [class*="hover:bg-[#9A7410]"]:hover {
+  background-color: var(--brand-gold);
+  color: var(--brand-bg-deep);
+}
+
+.contact-page [class~="bg-white"] {
+  background-color: var(--brand-surface);
+}
+
+.contact-page [class~="bg-[#FAF8F5]"],
+.contact-page input,
+.contact-page select,
+.contact-page textarea {
+  background-color: var(--brand-bg-deep);
+  color: var(--brand-text);
+}
+
+.contact-page [class~="text-[#1A1A1A]"] {
+  color: var(--brand-text);
+}
+
+.contact-page [class*="border-black/"],
+.contact-page .border-gray-100,
+.contact-page .divide-gray-100 > :not([hidden]) ~ :not([hidden]) {
+  border-color: rgba(242, 239, 228, 0.14);
+}
+
+.contact-page input::placeholder,
+.contact-page textarea::placeholder {
+  color: rgba(242, 239, 228, 0.45);
+}
+
+.contact-page option {
+  background: var(--brand-surface);
+  color: var(--brand-text);
+}
+
+.contact-page [class~="bg-[#1A1A1A]"] {
+  background: var(--brand-gold);
+  color: var(--brand-bg-deep);
+}
+
+.collection-page [class~="text-[#1A1A1A]"] {
+  color: var(--brand-text);
+}
+
+.collection-gallery {
+  margin-top: 0;
+}
+
+.collection-page .text-black {
+  color: var(--brand-text);
+}
+
+.about-page section.bg-white::before {
+  background: rgba(242, 239, 228, 0.12);
 }

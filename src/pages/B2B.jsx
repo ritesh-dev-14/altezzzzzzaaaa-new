@@ -57,7 +57,7 @@ export default function B2B() {
   const currentPartner = PARTNERS.find((partner) => partner.id === activePartner) ?? PARTNERS[0];
 
   return (
-    <main className="bg-[#FAF8F5] text-[#1A1A1A] min-h-screen">
+    <main className="b2b-page min-h-screen">
       <section className="relative pt-32 pb-24 px-6 md:px-12 overflow-hidden bg-white">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-[#C5A059]/10 blur-[140px] pointer-events-none rounded-full" />
         <div className="max-w-5xl mx-auto text-center relative z-10">
