@@ -945,8 +945,8 @@ export default function Home() {
   useLayoutEffect(() => { window.scrollTo(0, 0); }, []);
 
   // ── Frame-sequence scroll animation (Apple-style) ───────────────────────
-  // Frames: /frames/ezgif-frame-001.jpg … ezgif-frame-200.jpg (in public/)
-  // All 200 Images are pre-loaded into memory on mount.
+  // Frames: /frames/ezgif-frame-001.jpg … ezgif-frame-197.jpg (in public/)
+  // All 197 images are pre-loaded into memory on mount.
   // GSAP scrubs a proxy.frame value; on each tick we drawImage() — instant,
   // zero codec decode, zero stutter, full smooth scroll.
   // ─────────────────────────────────────────────────────────────────────────
@@ -956,7 +956,7 @@ export default function Home() {
     if (!canvas || !section) return;
 
     const ctx2d = canvas.getContext('2d');
-    const TOTAL = 200;
+    const TOTAL = 197;
     const images = new Array(TOTAL);
     let killed = false;
     let currentRenderedIndex = 0;
