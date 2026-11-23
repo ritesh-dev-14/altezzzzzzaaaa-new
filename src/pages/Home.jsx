@@ -566,6 +566,7 @@ function FullscreenFeature() {
             </div>
           </aside>
         </div>
+
       </div>
     </section>
   );
@@ -935,6 +936,7 @@ function PressAndTestimonials() {
 export default function Home() {
   const heroRef = useRef(null);
   const canvasRef = useRef(null);
+  const ambientCanvasRef = useRef(null);
   const scrollCueRef = useRef(null);
   const reduceMotion = useReducedMotion();
 
@@ -952,10 +954,12 @@ export default function Home() {
   // ─────────────────────────────────────────────────────────────────────────
   useEffect(() => {
     const canvas = canvasRef.current;
+    const ambientCanvas = ambientCanvasRef.current;
     const section = heroRef.current;
     if (!canvas || !section) return;
 
     const ctx2d = canvas.getContext('2d');
+    const ambientCtx = ambientCanvas ? ambientCanvas.getContext('2d') : null;
     const TOTAL = 197;
     const images = new Array(TOTAL);
     let killed = false;
@@ -974,8 +978,10 @@ export default function Home() {
       const nw = img.naturalWidth;
       const nh = img.naturalHeight;
 
-      // Full-screen cover: fills 100% of width and height edge-to-edge
-      const scale = Math.max(cw / nw, ch / nh);
+      // Keep the full frame visible on narrow screens instead of cropping its sides.
+      const scale = window.innerWidth <= 700
+        ? Math.min(cw / nw, ch / nh)
+        : Math.max(cw / nw, ch / nh);
       const dw = nw * scale;
       const dh = nh * scale;
       const dx = (cw - dw) / 2;
@@ -983,6 +989,22 @@ export default function Home() {
 
       ctx2d.clearRect(0, 0, cw, ch);
       ctx2d.drawImage(img, dx, dy, dw, dh);
+
+      if (ambientCtx && ambientCanvas && window.innerWidth <= 700) {
+        const aw = ambientCanvas.width;
+        const ah = ambientCanvas.height;
+        const ambientScale = Math.max(aw / nw, ah / nh);
+        const ambientWidth = nw * ambientScale;
+        const ambientHeight = nh * ambientScale;
+        ambientCtx.clearRect(0, 0, aw, ah);
+        ambientCtx.drawImage(
+          img,
+          (aw - ambientWidth) / 2,
+          (ah - ambientHeight) / 2,
+          ambientWidth,
+          ambientHeight
+        );
+      }
     };
 
     // Render target frame with instant fallback to nearest loaded frame
@@ -1026,6 +1048,11 @@ export default function Home() {
 
       canvas.width = rect.width * dpr;
       canvas.height = rect.height * dpr;
+
+      if (ambientCanvas) {
+        ambientCanvas.width = 320;
+        ambientCanvas.height = 180;
+      }
 
       render(currentRenderedIndex);
     };
@@ -1090,10 +1117,32 @@ export default function Home() {
         <div className="home-hero__stage">
           {/* Canvas displays pre-loaded frames as you scroll — zero stutter */}
           <canvas
+            ref={ambientCanvasRef}
+            className="home-hero__ambient"
+            aria-hidden="true"
+          />
+          <canvas
             ref={canvasRef}
             className="home-hero__canvas"
             aria-hidden="true"
           />
+          <div
+            className={`home-hero__mobile-editorial${reduceMotion ? ' is-static' : ''}`}
+            aria-hidden="true"
+          >
+            <div className="home-hero__mobile-brand">
+              <span>ALTEZZA</span>
+              <span className="home-hero__mobile-divider" />
+              <span>BESPOKE LIVING</span>
+            </div>
+            <div className="home-hero__mobile-caption">
+              <span>KITCHENS · WARDROBES · INTERIORS</span>
+              <p>
+                <span>Spaces that feel</span>
+                <span>like <em>home.</em></span>
+              </p>
+            </div>
+          </div>
           <div ref={scrollCueRef} className="home-hero__scroll">
             <span>Scroll down to explore</span>
             <ArrowDown size={15} aria-hidden="true" />
