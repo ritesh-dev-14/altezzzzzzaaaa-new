@@ -11,6 +11,15 @@ import kitchenWardrobe from '../../images/collection-wardrobes.webp';
 import storageDetail from '../../images/about-interior.avif';
 import craftsmanshipKitchen from '../../images/craftsmanship-kitchen.webp';
 
+const heroFrameModules = import.meta.glob('../assets/hero-frames/frame-*.jpg', {
+  eager: true,
+  query: '?url',
+  import: 'default',
+});
+const heroFrameUrls = Object.keys(heroFrameModules)
+  .sort()
+  .map((path) => heroFrameModules[path]);
+
 gsap.registerPlugin(ScrollTrigger);
 
 // --- DATA ---
@@ -947,8 +956,7 @@ export default function Home() {
   useLayoutEffect(() => { window.scrollTo(0, 0); }, []);
 
   // ── Frame-sequence scroll animation (Apple-style) ───────────────────────
-  // Frames: /frames/ezgif-frame-001.jpg … ezgif-frame-197.jpg (in public/)
-  // All 197 images are pre-loaded into memory on mount.
+  // The video-derived frames live in src/assets/hero-frames and are pre-loaded.
   // GSAP scrubs a proxy.frame value; on each tick we drawImage() — instant,
   // zero codec decode, zero stutter, full smooth scroll.
   // ─────────────────────────────────────────────────────────────────────────
@@ -960,12 +968,10 @@ export default function Home() {
 
     const ctx2d = canvas.getContext('2d');
     const ambientCtx = ambientCanvas ? ambientCanvas.getContext('2d') : null;
-    const TOTAL = 197;
+    const TOTAL = heroFrameUrls.length;
     const images = new Array(TOTAL);
     let killed = false;
     let currentRenderedIndex = 0;
-
-    const pad = (n) => String(n).padStart(3, '0');
 
     // Draw frame on canvas with full cover fit:
     // Seamlessly covers the entire screen edge-to-edge with zero bars or gaps
@@ -1059,7 +1065,7 @@ export default function Home() {
 
     // Preload frame 1 immediately
     const firstImg = new Image();
-    firstImg.src = `/frames/ezgif-frame-001.jpg`;
+    firstImg.src = heroFrameUrls[0];
     images[0] = firstImg;
     firstImg.onload = () => {
       if (killed) return;
@@ -1069,7 +1075,7 @@ export default function Home() {
     // Preload all remaining frames in parallel
     for (let i = 1; i < TOTAL; i++) {
       const img = new Image();
-      img.src = `/frames/ezgif-frame-${pad(i + 1)}.jpg`;
+      img.src = heroFrameUrls[i];
       images[i] = img;
     }
 
